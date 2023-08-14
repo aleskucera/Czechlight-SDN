@@ -1,0 +1,19 @@
+line_degree:
+  default:
+    line_ports: 1
+    intra_ports: 8
+    client_ports: null
+
+add_drop:
+  coherent:
+    line_ports: null
+    intra_ports: 8
+    client_ports: 8
+  wss:
+    line_ports: null
+    intra_ports: 8
+    client_ports: 20
+  alien_wavelength:
+    line_ports: null
+    intra_ports: 8
+    client_ports: 20
