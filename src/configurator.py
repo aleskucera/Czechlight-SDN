@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from .device import TerminationPoint, DirectionalPort
+from .device import TerminalPoint, DirectionalPort
 
 
 def simple_configuration(path: Dict[str, List[DirectionalPort]]) -> Dict[str, Dict[str, Dict[str, float]]]:
@@ -22,7 +22,7 @@ def simple_configuration(path: Dict[str, List[DirectionalPort]]) -> Dict[str, Di
     lower_freq, upper_freq, attenuation = 193.1, 193.9, 0.5
 
     for node in path['direction_ab'] + path['direction_ba']:
-        if isinstance(node.device, TerminationPoint):
+        if isinstance(node.device, TerminalPoint):
             continue
 
         device_name = node.device.name

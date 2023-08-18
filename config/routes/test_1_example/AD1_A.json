@@ -1,0 +1,28 @@
+{
+  "channel-plan": {
+    "channel": [
+      {
+        "name": "30 (100GHz)",
+        "lower-frequency": "192950000",
+        "upper-frequency": "193050000"
+      }
+    ]
+  },
+  "media-channels": {
+    "channel": "30 (100GHz)",
+    "add": {
+      "port": "1"
+    },
+    "drop": {
+      "port": "1"
+    },
+    "power": {
+      "common-in": "2.0",
+      "common-out": "2.0",
+      "leaf-in": "2.0",
+      "leaf-out": "2.0"
+    }
+  }
+}
+
+

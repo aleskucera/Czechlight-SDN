@@ -1,0 +1,83 @@
+module czechlight-coherent-add-drop {
+  yang-version 1.1;
+  namespace
+    "http://czechlight.cesnet.cz/yang/czechlight-coherent-add-drop";
+
+  prefix "cla-coherent-a-d";
+
+  import opendevice-types {
+    prefix "odt";
+    revision-date 2017-10-08;
+  }
+
+  import czechlight-roadm-common {
+    prefix "cla-common";
+    revision-date 2021-03-05;
+  }
+
+  organization "CESNET";
+  contact "photonic@cesnet.cz";
+  description "ROADM configuration";
+
+  revision 2019-09-30 {
+    description "Initial release";
+  }
+
+  revision 2021-03-05 {
+    description "Spectrum scanning via operational datastore";
+  }
+
+  container aggregate-power {
+    config false;
+    description "Aggregate powers (PD) at common ports";
+
+    leaf express-in {
+      type odt:optical-power-dBm;
+      mandatory true;
+      description "Optical power at each of the Express IN ports";
+    }
+
+    leaf express-out {
+      type odt:optical-power-dBm;
+      mandatory true;
+      description "Optical power at each of the Express OUT ports";
+    }
+
+    leaf drop {
+      type odt:optical-power-dBm;
+      mandatory true;
+      description "Optical power at each of the DROP ports";
+    }
+  }
+
+  list client-ports {
+    leaf "port" {
+      description "Port number";
+      type int8 {
+        range "1..8";
+      }
+    }
+    key "port";
+
+    leaf "description" {
+      description "User description of a client port";
+      type string;
+    }
+
+    container add {
+      description "Thresholds on the ADD ports";
+      uses cla-common:power-alarm-thresholds;
+    }
+
+    leaf input-power {
+      config false;
+      type odt:optical-power-dBm;
+      description "Aggregate power at the ADD port";
+      mandatory true;
+    }
+
+    min-elements 8;
+    max-elements 8;
+  }
+
+}

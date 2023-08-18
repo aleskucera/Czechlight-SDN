@@ -96,20 +96,6 @@ class Network:
         ret["direction_ba"] = nx.shortest_path(self.graph, node_b_tx, node_a_rx)
         return ret
 
-    @staticmethod
-    def condensed_path(path: List[DirectionalPort]) -> List[DirectionalPort]:
-        """Shorten the path by removing internal connections of devices.
-
-        Args:
-            path (List[DirectionalPort]): The path to shorten.
-
-        Returns:
-            List[DirectionalPort]: The shortened path.
-        """
-
-        condensed = [node for i, node in enumerate(path) if i == 0 or node.device != path[i - 1].device]
-        return condensed
-
     def draw(self) -> None:
         """Draw the device graph.
 

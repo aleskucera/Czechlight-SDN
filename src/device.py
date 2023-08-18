@@ -1,6 +1,10 @@
 from itertools import product
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from dataclasses import dataclass
+
+import numpy as np
+
+from .channel import Channel, SPECTRUM
 
 
 @dataclass
@@ -33,9 +37,31 @@ class DirectionalPort:
     device: 'Device'
     port: str
     direction: str
+    power: float = None
+
+    @property
+    def is_leaf_port(self):
+        if isinstance(self.device, CzechLightLineDegree):
+            return self.port.startswith('E')
+        elif isinstance(self.device, CzechLightAddDrop):
+            return self.port.startswith('C')
 
     def __post_init__(self):
         assert self.direction in ["TX", "RX"], f"Invalid direction: {self.direction}"
+
+    def add_port_config(self, channel_config: dict):
+        # assert self.power is not None, "The port power must be set before adding port configuration"
+
+        power_direction = "in" if self.direction == "RX" else "out"
+
+        if self.is_leaf_port:
+            channel_direction = "add" if self.direction == "RX" else "drop"
+            channel_config["media-channels"][0][channel_direction]["port"] = self.port
+            channel_config["media-channels"][0]["power"][f"leaf-{power_direction}"] = self.power
+        else:
+            channel_config["media-channels"][0]["power"][f"common-{power_direction}"] = self.power
+
+        return channel_config
 
     def __repr__(self):
         return f"{self.device.name}:{self.port}:{self.direction}"
@@ -49,7 +75,8 @@ class Device:
 
     def __init__(self, name: str):
         self.name = name
-        self.links = {}
+        self.links = dict()
+        self.channels = list()
 
     def add_link(self, port: str, device: 'Device', device_port: str) -> None:
         """Add a link to another device at the specified port.
@@ -62,9 +89,27 @@ class Device:
         Returns:
             None
         """
-
         assert port in self.links
         self.links[port] = NeighborInfo(device, device_port)
+
+    def add_channel(self, channel: Channel) -> None:
+        """Add a channel to the device.
+
+        Args:
+            channel (Channel): The channel to add to the device.
+
+        Returns:
+            None
+        """
+        self.channels.append(channel)
+
+    @property
+    def spectrum_occupancy(self):
+        spectrum_occupancy = np.zeros(SPECTRUM["bandwidth"], dtype=bool)
+        for channel in self.channels:
+            shifted_band = channel.frequency_band - SPECTRUM["lower_bound"]
+            spectrum_occupancy[shifted_band] = True
+        return spectrum_occupancy
 
     @property
     def neighbors(self) -> List['Device']:
@@ -106,9 +151,6 @@ class Device:
         """
         internal_edges = self.internal_edges
         external_edges = self.external_edges
-
-        # logger.info(f"From device {self.name}, added {len(internal_edges)} internal edges and "
-        #             f"{len(external_edges)} external edges to the graph.")
 
         return internal_edges + external_edges
 
@@ -177,8 +219,6 @@ class CzechLightLineDegree(Device):
         self.links = {"LINE": None}
         self.links.update({f"E{i}": None for i in range(1, self.num_express_ports + 1)})
 
-        # logger.info(f"Created CzechLightLineDegree device {self.name} with {self.num_express_ports} express ports.")
-
     @property
     def internal_edges(self) -> List[Tuple[DirectionalPort, DirectionalPort]]:
         """Generate internal edges for Czech Light Line Degree devices.
@@ -215,9 +255,6 @@ class CzechLightAddDrop(Device):
         self.links = {f"E{i}": None for i in range(1, self.num_express_ports + 1)}
         self.links.update({f"C{i}": None for i in range(1, self.num_client_ports + 1)})
 
-        # logger.info(f"Created CzechLightAddDrop device {self.name} with {self.num_express_ports} "
-        #             f"express ports and {self.num_client_ports} client ports.")
-
     @property
     def internal_edges(self) -> List[Tuple[DirectionalPort, DirectionalPort]]:
         """Generate internal edges for Czech Light Add Drop devices.
@@ -237,17 +274,15 @@ class CzechLightAddDrop(Device):
         return edges
 
 
-class TerminationPoint(Device):
-    """Class representing Termination Point devices.
+class TerminalPoint(Device):
+    """Class representing Terminal Point devices.
 
-    This class represents termination point devices which have a single client port.
+    This class represents terminal point devices which have a single client port.
 
     Attributes:
-        name (str): The name of the termination point device.
+        name (str): The name of the terminal point device.
     """
 
     def __init__(self, name: str):
         super().__init__(name)
         self.links = {"C": None}
-
-        # logger.info(f"Created TerminationPoint {self.name}.")
