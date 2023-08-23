@@ -39,29 +39,48 @@ class DirectionalPort:
     direction: str
     power: float = None
 
+    def __post_init__(self):
+        assert self.direction in ["TX", "RX"], f"Invalid direction: {self.direction}"
+
     @property
     def is_leaf_port(self):
+        """Check if the port is a leaf port.
+
+        Returns:
+            bool: True if the port is a leaf port, False otherwise.
+        """
         if isinstance(self.device, CzechLightLineDegree):
             return self.port.startswith('E')
         elif isinstance(self.device, CzechLightAddDrop):
             return self.port.startswith('C')
 
-    def __post_init__(self):
-        assert self.direction in ["TX", "RX"], f"Invalid direction: {self.direction}"
+    @property
+    def is_terminal(self):
+        """Check if the port is a terminal port.
 
-    def add_port_config(self, channel_config: dict):
-        # assert self.power is not None, "The port power must be set before adding port configuration"
+        Returns:
+            bool: True if the port is a terminal port, False otherwise.
+        """
+        return isinstance(self.device, TerminalPoint)
 
+    def add_port_config(self, channel_config: dict) -> None:
+        """
+        Add port configuration to the channel configuration dictionary. This method
+        changes the channel_config dictionary in place.
+
+        Args:
+            channel_config (dict): The channel configuration dictionary.
+
+        Returns:
+            None
+        """
         power_direction = "in" if self.direction == "RX" else "out"
-
         if self.is_leaf_port:
             channel_direction = "add" if self.direction == "RX" else "drop"
             channel_config["media-channels"][0][channel_direction]["port"] = self.port
             channel_config["media-channels"][0]["power"][f"leaf-{power_direction}"] = self.power
         else:
             channel_config["media-channels"][0]["power"][f"common-{power_direction}"] = self.power
-
-        return channel_config
 
     def __repr__(self):
         return f"{self.device.name}:{self.port}:{self.direction}"
@@ -71,12 +90,18 @@ class DirectionalPort:
 
 
 class Device:
-    """Base class for network devices."""
+    """Base class for network devices.
 
-    def __init__(self, name: str):
+    Attributes:
+        name (str): The name of the device.
+        links (dict): A dictionary of links to other devices.
+        channels (List[Channel]): A list of channels on the device.
+    """
+
+    def __init__(self, name: str, channels: List[Channel] = None):
         self.name = name
         self.links = dict()
-        self.channels = list()
+        self.channels = channels if channels is not None else list()
 
     def add_link(self, port: str, device: 'Device', device_port: str) -> None:
         """Add a link to another device at the specified port.
@@ -105,6 +130,11 @@ class Device:
 
     @property
     def spectrum_occupancy(self):
+        """Get the spectrum occupancy of the device.
+
+        Returns:
+            np.ndarray: The spectrum occupancy of the device.
+        """
         spectrum_occupancy = np.zeros(SPECTRUM["bandwidth"], dtype=bool)
         for channel in self.channels:
             shifted_band = channel.frequency_band - SPECTRUM["lower_bound"]
@@ -127,7 +157,6 @@ class Device:
         Returns:
             List[Tuple[DirectionalPort, DirectionalPort]]: A list of internal edges.
         """
-        # Generate internal links based on the device's links
         return []
 
     @property
@@ -209,11 +238,13 @@ class CzechLightLineDegree(Device):
 
     Attributes:
         name (str): The name of the device.
+        links (dict): A dictionary of links to other devices.
+        channels (List[Channel]): A list of channels on the device.
         num_express_ports (int, optional): The number of express ports on the device. Default is 8.
     """
 
-    def __init__(self, name: str, num_express_ports: int = 8):
-        super().__init__(name)
+    def __init__(self, name: str, channels: List[Channel] = None, num_express_ports: int = 8):
+        super().__init__(name, channels)
         self.num_express_ports = num_express_ports
 
         self.links = {"LINE": None}
@@ -243,12 +274,15 @@ class CzechLightAddDrop(Device):
 
     Attributes:
         name (str): The name of the device.
+        links (dict): A dictionary of links to other devices.
+        channels (List[Channel]): A list of channels on the device.
         num_express_ports (int, optional): The number of express ports on the device. Default is 8.
         num_client_ports (int, optional): The number of client ports on the device. Default is 8.
     """
 
-    def __init__(self, name: str, num_express_ports: int = 8, num_client_ports: int = 8):
-        super().__init__(name)
+    def __init__(self, name: str, channels: List[Channel] = None, num_express_ports: int = 8,
+                 num_client_ports: int = 8):
+        super().__init__(name, channels)
         self.num_client_ports = num_client_ports
         self.num_express_ports = num_express_ports
 
@@ -281,6 +315,7 @@ class TerminalPoint(Device):
 
     Attributes:
         name (str): The name of the terminal point device.
+        links (dict): A dictionary of links to other devices.
     """
 
     def __init__(self, name: str):

@@ -4,6 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 from .device import Device, DirectionalPort
+from .path import NetworkPath
 
 
 class Network:
@@ -74,7 +75,7 @@ class Network:
             graph.add_edges_from(device.graph_edges)
         return graph
 
-    def shortest_path(self, tp_a: str, tp_b: str) -> Dict[str, List[DirectionalPort]]:
+    def shortest_path(self, tp_a: str, tp_b: str) -> NetworkPath:
         """Find the shortest path between two termination points.
 
         Args:
@@ -85,16 +86,15 @@ class Network:
             Dict[str, List[DirectionalPort]]: A dictionary containing the shortest paths in both directions.
         """
 
-        ret = {}
-
         node_a_rx = DirectionalPort(self.devices[tp_a], 'C', "RX")
         node_a_tx = DirectionalPort(self.devices[tp_a], 'C', "TX")
         node_b_rx = DirectionalPort(self.devices[tp_b], 'C', "RX")
         node_b_tx = DirectionalPort(self.devices[tp_b], 'C', "TX")
 
-        ret["direction_ab"] = nx.shortest_path(self.graph, node_a_tx, node_b_rx)
-        ret["direction_ba"] = nx.shortest_path(self.graph, node_b_tx, node_a_rx)
-        return ret
+        direction_ab = nx.shortest_path(self.graph, node_a_tx, node_b_rx)
+        direction_ba = nx.shortest_path(self.graph, node_b_tx, node_a_rx)
+
+        return NetworkPath(direction_ab, direction_ba)
 
     def draw(self) -> None:
         """Draw the device graph.
