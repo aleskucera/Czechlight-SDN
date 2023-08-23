@@ -1,8 +1,8 @@
-# CzechLight Software-Defined Network (SDN) Planning and Configuration Tool
+# CzechLight Software-Defined Network (SDN)
 
 ## Introduction
 
-The CzechLight SDN Controller serves as a software-defined network planning and configuration tool designed specifically
+The CzechLight SDN serves as a software-defined network planning and configuration tool designed specifically
 for the CzechLight optical network.
 
 ## Prerequisites
