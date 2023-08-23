@@ -2,12 +2,12 @@
 
 ## Introduction
 
-CzechLight SDN Controller is a software-defined network planning and configuration tool for the CzechLight optical
-network.
+The CzechLight SDN Controller serves as a software-defined network planning and configuration tool designed specifically
+for the CzechLight optical network.
 
 ## Prerequisites
 
-Install prerequisites using `pip`:
+To set up the environment, install the required dependencies using the following `pip` command::
 
 ```bash
 pip install -r requirements.txt
@@ -15,9 +15,9 @@ pip install -r requirements.txt
 
 ## Code structure
 
-The key class of this project is the `Network` (`src/network.py`) class which represents the whole network.
-The `Network`
-class stores all devices in the network and the connections between them. The `Network` can be created with the
+At the core of this project is the `Network` class (`src/network.py`), which represents the entire network. This class
+encapsulates all network devices and their interconnections. To create an instance of the network, utilize the following
+Python code:
 
 ```python
 from src.network import Network
@@ -25,8 +25,8 @@ from src.network import Network
 net = Network()
 ```
 
-Then the devices can be added to the network using the `add_device` method. Before we add the devices though, we need to
-specify the channels that are currently used by the devices. This is done by the `Channel` class:
+Devices can then be added to the network using the `add_device` method. Before adding devices, it's important to
+define the channels currently in use by these devices. The `Channel` class facilitates this process:
 
 ```python
 from src.channel import Channel
@@ -51,40 +51,40 @@ net.add_device(ad)
 net.add_device(tp)
 ```
 
-We also need to specify the connections between the devices. This is done by the `add_bidi_link()` method:
+Additionally, the connections between devices need to be defined using the `add_bidi_link` method:
 
 ```python
 net.add_bidi_link("LN", "E1", "AD", "E2")
 ```
 
-By now the network is created, you can visualize it by calling `net.draw()`, which will draw simplified undirected
-graph.
+With the network established, you can visualize it using the `net.draw()` method, which generates a simplified
+undirected graph representation.
 
 ![Network](./figures/network.png)
 
-We can also use it to find the shortest path between two devices:
+The tool also supports finding the shortest path between two devices:
 
 ```python
 path = net.find_shortest_path("LN", "AD")
 ```
 
-The `path` variable is `Path` object which contains the list of `DirectionalPorts` that need to be traversed to get from
-the first device to the second one and the other way around. We can also generate a configuration for the devices on
-this path:
+The `path` variable holds a `Path` object containing a list of `DirectionalPorts` to traverse between the two devices
+and back. Furthermore, it's possible to generate device configurations along this path:
 
 ```python
 channel = Channel(195_975_000, 196_025_000)  # 60.0
 config = path.generate_config(channel, "./output_dir")
 ```
 
+This operation produces device configurations, saving them in the `./output_dir` directory.
+
 > **NOTE**
-> The `generate_config` method adds to configuration **null** power values, because there is currently no way to
-> calculate them.
+> The `generate_config` method currently adds **null** power values to the configuration due to an absence of
+> calculation
+> methods. This aspect requires modification before sending configurations to devices.
 
-Which will generate configuration for the devices on the path and save it to the `./output_dir` directory.
-
-If we are not sure which channel to use, we can visualize the bandwidth usage of the devices on the path by calling
-`path.visualize_occupancy()`:
+For scenarios when channel selection is uncertain, the tool provides a means to visualize bandwidth usage along the path
+through `path.visualize_occupancy()`:
 
 ![Occupancy](./figures/occupancy.png)
 
