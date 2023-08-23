@@ -78,7 +78,7 @@ config = path.generate_config(channel, "./output_dir")
 ```
 
 > **NOTE**
-> The `generate_config` method adds to configuration **null** power values for, because there is currently no way to
+> The `generate_config` method adds to configuration **null** power values, because there is currently no way to
 > calculate them.
 
 Which will generate configuration for the devices on the path and save it to the `./output_dir` directory.
