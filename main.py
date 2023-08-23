@@ -31,12 +31,10 @@ channel_11 = Channel(195_950_000, 196_050_000)  # 60 (100GHz)
 
 def test_1():
     ln_1 = CzechLightLineDegree("LN1_A")
-    ln_1.add_channel(channel_1)
-    ln_1.add_channel(channel_3)
-    ln_1.add_channel(channel_10)
+    ln_1.add_channels([channel_1, channel_3, channel_8, channel_9])
     ln_2 = CzechLightLineDegree("LN2_A")
     ln_3 = CzechLightLineDegree("LN1_B")
-    ln_3.add_channel(channel_7)
+    ln_3.add_channels([channel_5, channel_7, channel_11])
     ln_4 = CzechLightLineDegree("LN2_B")
 
     ad1 = CzechLightAddDrop("AD1_A")

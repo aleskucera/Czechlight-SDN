@@ -37,11 +37,11 @@ channel_2 = Channel(191_550_000, 191_650_000)  # 16 (100GHz)
 
 # Create Line Degree example
 ln = CzechLightLineDegree("LN")
-ln.add_channel(channel_1)
+ln.add_channels([channel_1, channel_2])
 
 # Create Add Drop example
 ad = CzechLightAddDrop("AD")
-ad.add_channel(channel_2)
+ad.add_channels([channel_1])
 
 # Create Terminal Point example
 tp = TerminalPoint("TP")
@@ -51,14 +51,18 @@ net.add_device(ad)
 net.add_device(tp)
 ```
 
-We also need to specify the connections between the devices. This is done by the `add_connection` method:
+We also need to specify the connections between the devices. This is done by the `add_bidi_link()` method:
 
 ```python
 net.add_bidi_link("LN", "E1", "AD", "E2")
 ```
 
 By now the network is created, you can visualize it by calling `net.draw()`, which will draw simplified undirected
-graph. We can also use it to find the shortest path between two devices:
+graph.
+
+![Network](./figures/graph.png)
+
+We can also use it to find the shortest path between two devices:
 
 ```python
 path = net.find_shortest_path("LN", "AD")
@@ -73,7 +77,16 @@ channel = Channel(195_975_000, 196_025_000)  # 60.0
 config = path.generate_config(channel, "./output_dir")
 ```
 
+> **NOTE**
+> The `generate_config` method adds to configuration constant power values (0) which is arbitrary value just for
+> testing purposes. The real values will be added later.
+
 Which will generate configuration for the devices on the path and save it to the `./output_dir` directory.
+
+If we are not sure which channel to use, we can visualize the bandwidth usage of the devices on the path by calling
+`path.visualize_occupancy()`:
+
+![Occupancy](./figures/spectrum.png)
 
 ## Plan of work
 

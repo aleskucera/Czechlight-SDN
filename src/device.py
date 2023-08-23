@@ -92,16 +92,16 @@ class Device:
         assert port in self.links
         self.links[port] = NeighborInfo(device, device_port)
 
-    def add_channel(self, channel: Channel) -> None:
+    def add_channels(self, channels: List[Channel]) -> None:
         """Add a channel to the device.
 
         Args:
-            channel (Channel): The channel to add to the device.
+            channels (List[Channel]): A list of channels to add to the device.
 
         Returns:
             None
         """
-        self.channels.append(channel)
+        self.channels.extend(channels)
 
     @property
     def spectrum_occupancy(self):
