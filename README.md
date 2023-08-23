@@ -63,7 +63,7 @@ net.add_bidi_link("LN", "E1", "AD", "E2")
 With the network established, you can visualize it using the `net.draw()` method, which generates a simplified
 undirected graph representation.
 
-<div style="text-align:center;">
+<div align="center">
     <img src="./figures/network.png" alt="Network Diagram">
 </div>
 
@@ -91,7 +91,7 @@ This operation produces device configurations, saving them in the `./output_dir`
 For scenarios when channel selection is uncertain, the tool provides a means to visualize bandwidth usage along the path
 through `path.visualize_occupancy()`:
 
-<div style="text-align:center;">
+<div align="center">
     <img src="./figures/occupancy.png" alt="Occupancy Diagram">
 </div>
 
