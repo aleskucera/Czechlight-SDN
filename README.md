@@ -1,11 +1,10 @@
 <div align="center">
     <img src="figures/czechlight_RGB.png", width="400">
-
-[//]: # (    <h1>CzechLight Software-Defined Network &#40;SDN&#41;</h1> )
 </div>
 
-## CzechLight Software-Defined Network (SDN)
-
+<div align="center">
+    <h2>CzechLight Software-Defined Network (SDN)</h2> 
+</div>
 The CzechLight SDN serves as a software-defined network planning and configuration tool designed specifically
 for the CzechLight optical network.
 
