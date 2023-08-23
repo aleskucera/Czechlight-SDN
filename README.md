@@ -1,7 +1,6 @@
-<div align="center">
-
-# CzechLight Software-Defined Network (SDN)
-
+<div style="text-align:center;">
+    <h1>CzechLight Software-Defined Network (SDN)</h1> 
+    <img src="figures/czechlight_RGB.png">
 </div>
 
 ## Introduction
@@ -64,7 +63,9 @@ net.add_bidi_link("LN", "E1", "AD", "E2")
 With the network established, you can visualize it using the `net.draw()` method, which generates a simplified
 undirected graph representation.
 
-![Network](./figures/network.png)
+<div style="text-align:center;">
+    <img src="./figures/network.png" alt="Network Diagram">
+</div>
 
 The tool also supports finding the shortest path between two devices:
 
@@ -90,7 +91,9 @@ This operation produces device configurations, saving them in the `./output_dir`
 For scenarios when channel selection is uncertain, the tool provides a means to visualize bandwidth usage along the path
 through `path.visualize_occupancy()`:
 
-![Occupancy](./figures/occupancy.png)
+<div style="text-align:center;">
+    <img src="./figures/occupancy.png" alt="Occupancy Diagram">
+</div>
 
 ## Plan of work
 
