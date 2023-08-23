@@ -1,6 +1,7 @@
 <div align="center">
     <img src="figures/czechlight_RGB.png", width="400">
-    <h1>CzechLight Software-Defined Network (SDN)</h1> 
+
+[//]: # (    <h1>CzechLight Software-Defined Network &#40;SDN&#41;</h1> )
 </div>
 
 ## Introduction
