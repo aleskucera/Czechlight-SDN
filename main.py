@@ -7,7 +7,6 @@ from src.network import Network
 from src.path import NetworkPath
 from src.utils import condense_path
 from src.channel import Channel
-from src.configurator import simple_configuration
 from src.device import CzechLightLineDegree, CzechLightAddDrop, TerminalPoint
 
 with open('config/logging.yaml', 'r') as f:
@@ -186,8 +185,6 @@ def test_2():
     path = net.shortest_path("TP1_D", "TP1_B")
     print("Shortest path between TP1_D and TP1_C:", path['direction_ab'])
     print("Condensed path:", condense_path(path['direction_ab']))
-    conf = json.dumps(simple_configuration(path), indent=4)
-    print(f"Configuration: {conf}")
 
 
 if __name__ == "__main__":

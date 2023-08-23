@@ -1,7 +1,7 @@
 import os
 import json
+from typing import List
 from copy import deepcopy
-from typing import List, Union
 
 import numpy as np
 from matplotlib import pyplot as plt
