@@ -60,7 +60,7 @@ net.add_bidi_link("LN", "E1", "AD", "E2")
 By now the network is created, you can visualize it by calling `net.draw()`, which will draw simplified undirected
 graph.
 
-![Network](./figures/graph.png)
+![Network](./figures/network.png)
 
 We can also use it to find the shortest path between two devices:
 
@@ -86,7 +86,7 @@ Which will generate configuration for the devices on the path and save it to the
 If we are not sure which channel to use, we can visualize the bandwidth usage of the devices on the path by calling
 `path.visualize_occupancy()`:
 
-![Occupancy](./figures/spectrum.png)
+![Occupancy](./figures/occupancy.png)
 
 ## Plan of work
 
