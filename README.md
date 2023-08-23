@@ -1,6 +1,6 @@
-<div style="text-align:center;">
+<div align="center">
+    <img src="figures/czechlight_RGB.png", width="400">
     <h1>CzechLight Software-Defined Network (SDN)</h1> 
-    <img src="figures/czechlight_RGB.png">
 </div>
 
 ## Introduction
