@@ -1,4 +1,8 @@
+<div align="center">
+
 # CzechLight Software-Defined Network (SDN)
+
+</div>
 
 ## Introduction
 
