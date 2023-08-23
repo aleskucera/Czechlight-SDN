@@ -4,12 +4,12 @@
 [//]: # (    <h1>CzechLight Software-Defined Network &#40;SDN&#41;</h1> )
 </div>
 
-## Introduction
+## CzechLight Software-Defined Network (SDN)
 
 The CzechLight SDN serves as a software-defined network planning and configuration tool designed specifically
 for the CzechLight optical network.
 
-## Prerequisites
+### Prerequisites
 
 To set up the environment, install the required dependencies using the following `pip` command::
 
@@ -17,7 +17,7 @@ To set up the environment, install the required dependencies using the following
 pip install -r requirements.txt
 ```
 
-## Code structure
+### Code structure
 
 At the core of this project is the `Network` class (`src/network.py`), which represents the entire network. This class
 encapsulates all network devices and their interconnections. To create an instance of the network, utilize the following
@@ -96,7 +96,7 @@ through `path.visualize_occupancy()`:
     <img src="./figures/occupancy.png" alt="Occupancy Diagram">
 </div>
 
-## Plan of work
+### Plan of work
 
 - [x] Create new repository for the controller
 - [x] Create a NetworkX graph representation of the network
